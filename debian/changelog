@@ -1,12 +1,5 @@
-simple-obfs (0.0.3-1) unstable; urgency=medium
+simple-obfs (0.0.3-1~exp1) experimental; urgency=low
 
-  * Add failover option.
-  * Minor bug fixes.
+  * Initial release. (Closes: #858370)
 
- -- Max Lv <max.c.lv@gmail.com>  Fri, 17 Mar 2017 17:02:43 +0800
-
-simple-obfs (0.0.2-1) UNRELEASED; urgency=low
-
-  * Initial release. (Closes: #)
-
- -- Roger Shimizu <rogershimizu@gmail.com>  Wed, 22 Feb 2017 21:55:18 +0900
+ -- Roger Shimizu <rogershimizu@gmail.com>  Wed, 22 Mar 2017 22:31:59 +0900
