@@ -4,7 +4,8 @@ Priority: extra
 Maintainer: Roger Shimizu <rogershimizu@gmail.com>
 Build-Depends:
  asciidoc-base | asciidoc,
- debhelper (>= 10),
+ debhelper (>= 9),
+ dh-autoreconf,
  libcork-dev,
  libev-dev,
  libsodium-dev (>= 1.0.8~),
