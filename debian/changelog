@@ -1,3 +1,13 @@
+simple-obfs (0.0.3-2) UNRELEASED; urgency=medium
+
+  * debian/rules:
+    - Add "--disable-ssp" option when dh_auto_configure, to fix FTBFS
+      for alpha/hppa arch. Whether to have stack-protector is decided
+      by dpkg-buildflags. So it should be safe here.
+      See Bug in parent project: #829498.
+
+ -- Roger Shimizu <rogershimizu@gmail.com>  Fri, 12 May 2017 19:25:20 +0900
+
 simple-obfs (0.0.3-1) unstable; urgency=medium
 
   * Initial release. (Closes: #858370)
