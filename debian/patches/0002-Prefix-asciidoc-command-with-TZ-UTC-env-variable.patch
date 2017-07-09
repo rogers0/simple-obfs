@@ -1,0 +1,27 @@
+From: Roger Shimizu <rogershimizu@gmail.com>
+Date: Sun, 9 Jul 2017 23:00:47 +0900
+Subject: Prefix asciidoc command with TZ=UTC env variable
+
+https://wiki.debian.org/ReproducibleBuilds/TimestampsInDocumentationGeneratedByAsciidoc
+---
+ doc/Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index 750d0fb..f030d53 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -46,11 +46,11 @@ html-local: $(MAN_HTML)
+ 	$(AM_V_GEN)$(XMLTO) -m $(MANPAGE_XSL) $(XMLTO_EXTRA) man $<
+ 
+ %.xml: %.asciidoc
+-	$(AM_V_GEN)$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
++	TZ=UTC $(AM_V_GEN)$(ASCIIDOC) -b docbook -d manpage -f asciidoc.conf \
+ 	    -aversion=$(VERSION) $(ASCIIDOC_EXTRA) -o $@ $<
+ 
+ %.html: %.asciidoc
+-	$(AM_V_GEN)$(ASCIIDOC) -b html4 -d article -f asciidoc.conf \
++	TZ=UTC $(AM_V_GEN)$(ASCIIDOC) -b html4 -d article -f asciidoc.conf \
+ 		-aversion=$(VERSION) $(ASCIIDOC_EXTRA) -o $@ $<
+ 
+ doc_DATA = $(MAN_HTML)

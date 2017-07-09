@@ -1,1 +1,2 @@
 0001-Use-libcork-dev-in-system.patch
+0002-Prefix-asciidoc-command-with-TZ-UTC-env-variable.patch
