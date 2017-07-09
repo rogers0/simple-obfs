@@ -19,7 +19,7 @@ index d5da3ab..a342e44 100644
  if ENABLE_DOCUMENTATION
  SUBDIRS += doc
 diff --git a/configure.ac b/configure.ac
-index 3c03364..73d29a9 100755
+index 7cdae38..df988a3 100755
 --- a/configure.ac
 +++ b/configure.ac
 @@ -281,7 +281,6 @@ AM_COND_IF([ENABLE_DOCUMENTATION],
