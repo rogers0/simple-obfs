@@ -1,0 +1,95 @@
+From: Max Lv <max.c.lv@gmail.com>
+Date: Sat, 17 Jun 2017 12:48:40 +0800
+Subject: Make reverse proxy support optional
+
+---
+ src/jconf.c  |  4 ++++
+ src/jconf.h  |  1 +
+ src/server.c | 12 +++++++++++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/src/jconf.c b/src/jconf.c
+index 6844b7e..601b6e4 100644
+--- a/src/jconf.c
++++ b/src/jconf.c
+@@ -206,6 +206,10 @@ read_jconf(const char *file)
+                 check_json_value_type(value, json_boolean,
+                     "invalid config file: option 'ipv6_first' must be a boolean");
+                 conf.ipv6_first = value->u.boolean;
++            } else if (strcmp(name, "reverse_proxy") == 0) {
++                check_json_value_type(value, json_boolean,
++                    "invalid config file: option 'reverse_proxy' must be a boolean");
++                conf.reverse_proxy = value->u.boolean;
+             }
+         }
+     } else {
+diff --git a/src/jconf.h b/src/jconf.h
+index 16e1b14..163a23d 100644
+--- a/src/jconf.h
++++ b/src/jconf.h
+@@ -58,6 +58,7 @@ typedef struct {
+     char *dst_addr;
+     int mptcp;
+     int ipv6_first;
++    int reverse_proxy;
+ } jconf_t;
+ 
+ jconf_t *read_jconf(const char *file);
+diff --git a/src/server.c b/src/server.c
+index ded73bf..66d586b 100644
+--- a/src/server.c
++++ b/src/server.c
+@@ -105,6 +105,7 @@ static void query_free_cb(void *data);
+ int verbose = 0;
+ 
+ static int ipv6first = 0;
++static int reverse_proxy = 0;
+ static int fast_open = 0;
+ 
+ static obfs_para_t *obfs_para = NULL;
+@@ -571,7 +572,7 @@ server_recv_cb(EV_P_ ev_io *w, int revents)
+         server->header_buf->len = server->buf->len - server->buf->idx;
+         server->header_buf->idx = 0;
+         memcpy(server->header_buf->data, server->buf->data + server->buf->idx, server->header_buf->len);
+-        if (obfs_para->send_empty_response_upon_connection) {
++        if (reverse_proxy && obfs_para->send_empty_response_upon_connection) {
+             // Clear the buffer to make an empty packet.
+             server->buf->len = 0;
+ 
+@@ -1237,6 +1238,8 @@ main(int argc, char **argv)
+                     obfs_host = value;
+                 } else if (strcmp(key, "failover") == 0) {
+                     failover_str = value;
++                } else if (strcmp(key, "reverse_proxy") == 0) {
++                    reverse_proxy = 1;
+ #ifdef __linux__
+                 } else if (strcmp(key, "mptcp") == 0) {
+                     mptcp = 1;
+@@ -1257,6 +1260,7 @@ main(int argc, char **argv)
+ #ifdef __linux__
+         { "mptcp",           no_argument,       0, 0 },
+ #endif
++        { "reverse_proxy",   no_argument,       0, 0 },
+         { 0,                 0,                 0, 0 }
+     };
+ 
+@@ -1285,6 +1289,9 @@ main(int argc, char **argv)
+             } else if (option_index == 5) {
+                 mptcp = 1;
+                 LOGI("enable multipath TCP");
++            } else if (option_index == 6) {
++                reverse_proxy = 1;
++                LOGI("enable reverse proxy");
+             }
+             break;
+         case 's':
+@@ -1399,6 +1406,9 @@ main(int argc, char **argv)
+         if (ipv6first == 0) {
+             ipv6first = conf->ipv6_first;
+         }
++        if (reverse_proxy == 0) {
++            reverse_proxy = conf->reverse_proxy;
++        }
+     }
+ 
+     if (server_num == 0) {

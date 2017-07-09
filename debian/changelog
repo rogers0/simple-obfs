@@ -3,6 +3,8 @@ simple-obfs (0.0.3-3) UNRELEASED; urgency=medium
   * debian/patches:
     - Refresh patch.
     - Add a patch to fix reproducible build.
+    - Cherry-pick two upstream patches to better work with reverse
+      proxy.
 
  -- Roger Shimizu <rogershimizu@gmail.com>  Sun, 09 Jul 2017 23:02:33 +0900
 

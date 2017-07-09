@@ -1,2 +1,4 @@
 0001-Use-libcork-dev-in-system.patch
 0002-Prefix-asciidoc-command-with-TZ-UTC-env-variable.patch
+backport/0003-Make-the-HTTP-obfuscation-work-behind-an-NGINX-rever.patch
+backport/0004-Make-reverse-proxy-support-optional.patch
