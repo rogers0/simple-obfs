@@ -1,3 +1,9 @@
+simple-obfs (0.0.3-3~bpo8+1) jessie-backports-sloppy; urgency=medium
+
+  * Rebuild for jessie-backports-sloppy.
+
+ -- Roger Shimizu <rogershimizu@gmail.com>  Sun, 16 Jul 2017 02:46:40 +0900
+
 simple-obfs (0.0.3-3~bpo9+1) stretch-backports; urgency=medium
 
   * Rebuild for stretch-backports.
