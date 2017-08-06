@@ -1,0 +1,23 @@
+From: Daniel McCarney <daniel@binaryparadox.net>
+Date: Mon, 19 Jun 2017 21:06:13 -0400
+Subject: Update "Current version" to 0.0.3. (#75)
+
+Prior to this commit the "Current version" in the README.md file was
+described as 0.0.2. There is a newer 0.0.3 release available.
+---
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index df224a6..ce784af 100644
+--- a/README.md
++++ b/README.md
+@@ -5,7 +5,7 @@
+ Simple-obfs is a simple obfusacting tool, designed
+ as plugin server of shadowsocks.
+ 
+-Current version: 0.0.2 | [Changelog](Changes)
++Current version: 0.0.3 | [Changelog](Changes)
+ 
+ ## Build
+ For Unix-like systems, especially Debian-based systems,

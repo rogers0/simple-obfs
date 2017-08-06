@@ -1,0 +1,36 @@
+From: Max Lv <max.c.lv@gmail.com>
+Date: Wed, 26 Jul 2017 07:40:06 +0800
+Subject: Check the frame size. #80
+
+---
+ src/obfs_tls.c | 3 +++
+ src/server.c   | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/obfs_tls.c b/src/obfs_tls.c
+index f844330..1319d99 100644
+--- a/src/obfs_tls.c
++++ b/src/obfs_tls.c
+@@ -231,6 +231,9 @@ deobfs_app_data(buffer_t *buf, size_t idx, obfs_t *obfs)
+             continue;
+         }
+ 
++        if (frame->len > 16384)
++            return OBFS_ERROR;
++
+         int left_len = buf->len - bidx;
+ 
+         if (left_len > frame->len) {
+diff --git a/src/server.c b/src/server.c
+index 66d586b..650b8db 100644
+--- a/src/server.c
++++ b/src/server.c
+@@ -74,7 +74,7 @@
+ #endif
+ 
+ #ifndef BUF_SIZE
+-#define BUF_SIZE 2048
++#define BUF_SIZE 16384
+ #endif
+ 
+ #ifndef SSMAXCONN

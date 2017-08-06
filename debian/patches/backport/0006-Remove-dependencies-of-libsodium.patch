@@ -1,0 +1,111 @@
+From: Max Lv <max.c.lv@gmail.com>
+Date: Tue, 30 May 2017 19:47:25 +0800
+Subject: Remove dependencies of libsodium
+
+---
+ configure.ac    | 36 ------------------------------------
+ src/Makefile.am |  2 +-
+ src/encrypt.c   |  9 +++++----
+ 3 files changed, 6 insertions(+), 41 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index df988a3..d25aae7 100755
+--- a/configure.ac
++++ b/configure.ac
+@@ -61,38 +61,6 @@ esac
+ dnl Checks for TLS
+ AX_TLS([:], [:])
+ 
+-dnl Checks for crypto library
+-case "${with_crypto_library}" in
+-  openssl)
+-    ss_ZLIB
+-    ss_OPENSSL
+-    AC_DEFINE([USE_CRYPTO_OPENSSL], [1], [Use OpenSSL library])
+-    ;;
+-  polarssl)
+-    ss_POLARSSL
+-    AC_DEFINE([USE_CRYPTO_POLARSSL], [1], [Use PolarSSL library])
+-    ;;
+-  mbedtls)
+-    ss_MBEDTLS
+-    AC_DEFINE([USE_CRYPTO_MBEDTLS], [1], [Use mbed TLS library])
+-    ;;
+-esac
+-
+-dnl Checks for Apple CommonCrypto API
+-AC_ARG_ENABLE(applecc,
+-  AS_HELP_STRING([--enable-applecc], [enable Apple CommonCrypto API support]),
+-  [
+-    AC_CHECK_HEADERS(CommonCrypto/CommonCrypto.h,
+-      [],
+-      [AC_MSG_ERROR([CommonCrypto header files not found.]); break]
+-    )
+-    AC_CHECK_FUNCS([CCCryptorCreateWithMode], ,
+-      [AC_MSG_ERROR([CommonCrypto API needs OS X (>= 10.7) and iOS (>= 5.0).]); break]
+-    )
+-    AC_DEFINE([USE_CRYPTO_APPLECC], [1], [Use Apple CommonCrypto library])
+-  ]
+-)
+-
+ dnl Checks for inet_ntop
+ ss_FUNC_INET_NTOP
+ 
+@@ -268,10 +236,6 @@ AC_CHECK_LIB(socket, connect)
+ dnl Checks for library functions.
+ AC_CHECK_FUNCS([malloc memset socket])
+ 
+-AC_CHECK_LIB([sodium], [sodium_init], [LIBS="-lsodium $LIBS"], [
+-   AC_MSG_ERROR([Couldn't find libsodium. Try installing libsodium-dev@<:@el@:>@.])
+-])
+-
+ AC_CHECK_LIB([udns], [dns_dnlen], [LIBS="-ludns $LIBS"], [AC_MSG_ERROR([Couldn't find libudns. Try installing libudns-dev or udns-devel.])])
+ 
+ AC_CHECK_LIB([ev], [ev_loop_destroy], [LIBS="-lev $LIBS"], [AC_MSG_ERROR([Couldn't find libev. Try installing libev-dev@<:@el@:>@.])])
+diff --git a/src/Makefile.am b/src/Makefile.am
+index f58b41e..6bfcb73 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -6,7 +6,7 @@ AM_CFLAGS += -I$(top_srcdir)/libcork/include
+ AM_CFLAGS += $(LIBPCRE_CFLAGS)
+ 
+ OBFS_COMMON_LIBS = $(INET_NTOP_LIB) $(LIBPCRE_LIBS)
+-OBFS_COMMON_LIBS += -lev -lsodium -lm -lcork
++OBFS_COMMON_LIBS += -lev -lm -lcork
+ 
+ bin_PROGRAMS = obfs-local
+ if !BUILD_WINCOMPAT
+diff --git a/src/encrypt.c b/src/encrypt.c
+index 6b2afe8..7926103 100644
+--- a/src/encrypt.c
++++ b/src/encrypt.c
+@@ -26,8 +26,6 @@
+ #include "config.h"
+ #endif
+ 
+-#include <sodium.h>
+-
+ #ifndef __MINGW32__
+ #include <arpa/inet.h>
+ #endif
+@@ -52,7 +50,7 @@ dump(char *tag, char *text, int len)
+ int
+ balloc(buffer_t *ptr, size_t capacity)
+ {
+-    sodium_memzero(ptr, sizeof(buffer_t));
++    memset(ptr, 0, sizeof(buffer_t));
+     ptr->data    = ss_malloc(capacity);
+     ptr->capacity = capacity;
+     return capacity;
+@@ -87,7 +85,10 @@ bfree(buffer_t *ptr)
+ int
+ rand_bytes(void *output, int len)
+ {
+-    randombytes_buf(output, len);
++    int i;
++    int *array = (int *)output;
++    for (i = 0; i < len / sizeof(int); i++)
++        array[i] = rand();
+     // always return success
+     return 0;
+ }
