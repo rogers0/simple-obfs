@@ -7,7 +7,6 @@ Build-Depends:
  debhelper (>= 10),
  libcork-dev,
  libev-dev,
- libsodium-dev (>= 1.0.8~),
  libudns-dev,
  xmlto
 Standards-Version: 3.9.8
